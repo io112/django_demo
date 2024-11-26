@@ -6,5 +6,19 @@ pipeline {
                 sh "docker build . -t iorp/devops2024_django:${GIT_COMMIT} -t iorp/devops2024_django:latest"
             }
         }
+        stage("push") {
+            steps {
+                withCredentials(
+                    [
+                        usernamePassword(credentialsId: 'iorp_dockerhub', 
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')
+                        ]
+                    ) {
+                        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+                        sh "docker push iorp/devops2024_django:${GIT_COMMIT}"
+                        sh "docker push iorp/devops2024_django:latest"
+                    }
+            }
+        }
     }
 }
