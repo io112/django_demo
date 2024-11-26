@@ -1,22 +1,26 @@
 pipeline {
     agent any
+    environment {
+        IMAGE_NAME = 'iorp/devops2024_django'
+        HUB_CRED_ID = 'iorp_dockerhub'
+    }
     stages {
         stage("build") {
             steps {
-                sh "docker build . -t iorp/devops2024_django:${GIT_COMMIT} -t iorp/devops2024_django:latest"
+                sh "docker build . -t ${IMAGE_NAME}:${GIT_COMMIT} -t ${IMAGE_NAME}:latest"
             }
         }
         stage("push") {
             steps {
                 withCredentials(
                     [
-                        usernamePassword(credentialsId: 'iorp_dockerhub', 
+                        usernamePassword(credentialsId: "${HUB_CRED_ID}", 
                         usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')
                         ]
                     ) {
                         sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-                        sh "docker push iorp/devops2024_django:${GIT_COMMIT}"
-                        sh "docker push iorp/devops2024_django:latest"
+                        sh "docker push ${IMAGE_NAME}:${GIT_COMMIT}"
+                        sh "docker push ${IMAGE_NAME}:latest"
                     }
             }
         }
