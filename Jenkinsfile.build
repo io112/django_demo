@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("build") {
             steps {
-                sh "docker build . -t iorp/devops2024_django:latest"
+                sh "docker build . -t iorp/devops2024_django:${GIT_COMMIT} -t iorp/devops2024_django:latest"
             }
         }
     }
