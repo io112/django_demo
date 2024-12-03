@@ -1,21 +1,17 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:latest'
-            args '-u root'
-        }
-    }
+    agent any
     stages {
-        stage("deps") {
-            steps {
-                sh 'pip install -r requirements.txt'
-                
-            }
-        }
         stage("test") {
-            steps {
-                sh 'python manage.py test'
-            }
+            script {
+                    def output = sh(returnStdout: true, script: 'echo $(echo $GIT_BRANCH   | sed -e "s|origin/||g")')
+                    GIT_LOCAL_BRANCH="${output}"
+                }
+                
+            build job: 'Django test parametrized',
+                parameters: [
+                    string(name: 'GIT_URL', value: "${GIT_URL}"),
+                    string(name: 'GIT_BRANCH', value: "${GIT_LOCAL_BRANCH}")
+                ]
         }
     }
 }
