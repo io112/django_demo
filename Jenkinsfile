@@ -13,8 +13,9 @@ pipeline {
         }
     }
 
-    String get_branch_name() {
-         def output = sh(returnStdout: true, script: 'echo $(echo $GIT_BRANCH   | sed -e "s|origin/||g")')
-        return "${output}"      
-    }
+
+}
+String get_branch_name() {
+        def output = sh(returnStdout: true, script: 'echo $(echo $GIT_BRANCH   | sed -e "s|origin/||g")')
+    return "${output}"      
 }
