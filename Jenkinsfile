@@ -24,5 +24,18 @@ pipeline {
                     ]
             }
         }
+        stage("push") {
+            steps {
+                withCredentials(
+                    [
+                        usernamePassword(usernameVariable: 'LOGIN', passwordVariable: 'PASSWORD', credentialsId: 'iorp_dockerhub')
+                        ]
+                    ) {
+                        sh 'docker login -u ${LOGIN} -p ${PASSWORD}'
+                        sh 'docker push ${IMAGE_NAME}:latest'
+                        sh 'docker push ${IMAGE_NAME}:${GIT_COMMIT}'
+                    }
+            }
+        }
     }
 }
