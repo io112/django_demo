@@ -41,15 +41,17 @@ pipeline {
             }
         }
         stage("deploy") {
-            withCredentials(
-                [
-                    sshUserPrivateKey(credentialsId: "${PROD_KEY_CRED_ID}", keyFileVariable: 'KEY_FILE', usernameVariable:'USERNAME'),
-                        string(credentialsId: "${PROD_ADDRESS_CRED_ID}", variable:'SERVER_ADDRESS')
+            steps {
+                withCredentials(
+                    [
+                        sshUserPrivateKey(credentialsId: "${PROD_KEY_CRED_ID}", keyFileVariable: 'KEY_FILE', usernameVariable:'USERNAME'),
+                            string(credentialsId: "${PROD_ADDRESS_CRED_ID}", variable:'SERVER_ADDRESS')
 
-                ]
-            ) {
-                sh 'ssh -o StrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${SERVER_ADDRESS} mkdir -p ${PROJECT_NAME}'
-            }
+                    ]
+                ) {
+                    sh 'ssh -o StrictHostKeyChecking=no -i ${KEY_FILE} ${USERNAME}@${SERVER_ADDRESS} mkdir -p ${PROJECT_NAME}'
+                }
+        }
         }
     }
 }
