@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = "iorp/django_demo"
-        PROD_KEY_CRED_ID = "devops_prod_key"
+        PROD_CRED_ID = "devops_prod_key"
         PROD_ADDRESS_CRED_ID = "devops_prod_address"
         PROJECT_NAME = "common_django"
     }
