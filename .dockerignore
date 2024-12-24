@@ -1,2 +1,5 @@
 venv
 db.sqlite3
+docker-compose.yaml
+Jenkinsfile
+Dockerfile
