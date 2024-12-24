@@ -1,7 +1,5 @@
-version: '3'
-
 services:
   app:
     image: iorp/django_demo:latest
     ports:
-      - "8081:8000"
+      - "8082:8000"
