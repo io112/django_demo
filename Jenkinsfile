@@ -4,8 +4,11 @@ pipeline {
         IMAGE_NAME = "iorp/django_demo"
         PROD_CRED_ID = "devops_prod_key"
         PROD_ADDRESS_CRED_ID = "devops_prod_address"
+        SONAR_CRED_ID = "sonar_token"
         PROJECT_NAME = "common_django"
         DOMAIN = "common.prod.mshp-devops.com"
+        SONARQUBE_URL = "84.201.184.207:9001"
+        SONAR_PROJECT_KEY = "django_common"
     }
     stages {
         stage("test") {
@@ -15,6 +18,25 @@ pipeline {
                         string(name: 'GIT_URL', value: "${GIT_URL}"),
                         string(name: 'GIT_BRANCH', value: "${GIT_BRANCH}")
                     ]
+            }
+        }
+        stage("scan") {
+            steps {
+                withCredentials(
+                    [
+                        string(credentialsId: "${SONAR_CRED_ID}", variable:'TOKEN')
+                    ]
+                        ) {
+                    sh '''
+                            docker run \
+                    --rm \
+                    -e SONAR_HOST_URL="http://${SONARQUBE_URL}" \
+                    -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=${SONAR_PROJECT_KEY}" \
+                    -e SONAR_LOGIN="${TOKEN}" \
+                    -v "./:/usr/src" \
+                    sonarsource/sonar-scanner-cli
+                '''
+                }
             }
         }
         stage("build") {
